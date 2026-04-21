@@ -1,0 +1,25 @@
+## .NET
+bin/
+obj/
+*.user
+.vs/
+*.suo
+
+## EF Migrations artifacts
+*.db
+*.db-shm
+*.db-wal
+
+## App settings (local overrides)
+appsettings.Development.json
+appsettings.Local.json
+
+## OS
+.DS_Store
+Thumbs.db
+
+## JetBrains
+.idea/
+
+## VS Code
+.vscode/

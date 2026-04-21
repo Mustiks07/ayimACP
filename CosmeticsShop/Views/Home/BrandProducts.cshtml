@@ -1,0 +1,57 @@
+@model List<CosmeticsShop.Domain.Entities.Product>
+@{
+    var brand = ViewBag.Brand as CosmeticsShop.Domain.Entities.Brand;
+    ViewData["Title"] = brand?.Title ?? "Бренд";
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Главная</a></li>
+            <li class="breadcrumb-item"><a href="/home/brands">Бренды</a></li>
+            <li class="breadcrumb-item active">@brand?.Title</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <div>
+            <h1 class="section-title mb-0">@brand?.Title @(brand?.IsVerified == true ? "<span class='badge-verified'>✓</span>" : "")</h1>
+            @if (!string.IsNullOrEmpty(brand?.Country))
+            {
+                <div style="color:var(--text-muted)">📍 @brand.Country</div>
+            }
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <p class="text-muted">Товаров этого бренда пока нет.</p>
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var p in Model)
+            {
+                <div class="col-6 col-md-3">
+                    <div class="product-card">
+                        <a href="/products/show/@p.Id" class="text-decoration-none">
+                            <div class="card-img-wrap">
+                                @if (!string.IsNullOrEmpty(p.ImageUrl))
+                                {
+                                    <img src="@p.ImageUrl" alt="@p.Title" loading="lazy" />
+                                }
+                            </div>
+                        </a>
+                        <div class="card-body">
+                            <div class="card-brand">@p.Category.Title</div>
+                            <a href="/products/show/@p.Id" class="text-decoration-none">
+                                <div class="card-title">@p.Title</div>
+                            </a>
+                            <div class="card-price">@p.Price.ToString("N0") ₸</div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

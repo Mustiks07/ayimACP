@@ -1,0 +1,49 @@
+@model List<CosmeticsShop.Domain.Entities.Review>
+@{
+    ViewData["Title"] = L.T("admin.reviews");
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 style="font-size:1.5rem;font-weight:800;margin-bottom:1.5rem">💬 @L.T("admin.reviews")</h1>
+
+<div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Товар</th>
+                <th>Автор</th>
+                <th>Рейтинг</th>
+                <th>Заголовок</th>
+                <th>Дата</th>
+                <th>Подтв.</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var review in Model)
+            {
+                <tr>
+                    <td>@review.Id</td>
+                    <td>
+                        <a href="/products/show/@review.ProductId" class="text-brand" style="font-size:0.85rem">
+                            @review.Product?.Title
+                        </a>
+                    </td>
+                    <td>@review.Author?.UserName</td>
+                    <td><span class="stars sm">@(new string('★', review.Rating))</span></td>
+                    <td>@review.Title</td>
+                    <td style="font-size:0.8rem">@review.DateCreated.ToString("dd.MM.yy")</td>
+                    <td>@(review.VerifiedPurchase ? "✅" : "—")</td>
+                    <td>
+                        <form method="post" action="/admin/reviews/delete/@review.Id" style="display:inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="vote-btn" style="color:#EF4444"
+                                    onclick="return confirm('Удалить отзыв?')">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

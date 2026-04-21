@@ -1,0 +1,15 @@
+@model CosmeticsShop.Domain.Entities.Order
+@{
+    ViewData["Title"] = L.T("order.success");
+}
+
+<div class="container py-5 text-center">
+    <div style="font-size:5rem">🎉</div>
+    <h1 style="font-size:2rem;font-weight:800;margin:1rem 0 0.5rem">@L.T("order.success")</h1>
+    <p style="color:var(--text-muted);font-size:1.1rem">@L.T("order.success_msg") <strong>#@Model.Id</strong></p>
+
+    <div class="d-flex gap-3 justify-content-center mt-3">
+        <a href="/orders/details/@Model.Id" class="btn-brand">📦 @L.T("order.details")</a>
+        <a href="/products" class="btn-outline-brand">🛍️ @L.T("cart.continue")</a>
+    </div>
+</div>

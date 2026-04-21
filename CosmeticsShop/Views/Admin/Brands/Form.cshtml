@@ -1,0 +1,41 @@
+@model CosmeticsShop.Domain.Entities.Brand
+@{
+    var isEdit = Model.Id > 0;
+    ViewData["Title"] = isEdit ? "Редактировать бренд" : "Добавить бренд";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a href="/admin/brands" class="btn-outline-brand" style="font-size:0.85rem">← Назад</a>
+    <h1 style="font-size:1.5rem;font-weight:800;margin:0">@ViewData["Title"]</h1>
+</div>
+
+<div style="max-width:500px;background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);padding:2rem">
+    <form method="post" action="@(isEdit ? $"/admin/brands/edit/{Model.Id}" : "/admin/brands/new")">
+        @Html.AntiForgeryToken()
+        @if (isEdit) { <input type="hidden" name="Id" value="@Model.Id" /> }
+
+        <div class="mb-3">
+            <label class="form-label">Название *</label>
+            <input name="Title" value="@Model.Title" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Страна</label>
+            <input name="Country" value="@Model.Country" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Описание</label>
+            <textarea name="Description" class="form-control" rows="3">@Model.Description</textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">URL логотипа</label>
+            <input name="LogoUrl" value="@Model.LogoUrl" class="form-control" />
+        </div>
+        <div class="mb-4 form-check">
+            <input name="IsVerified" value="true" type="checkbox" class="form-check-input" @(Model.IsVerified ? "checked" : "") />
+            <input type="hidden" name="IsVerified" value="false" />
+            <label class="form-check-label">Верифицирован</label>
+        </div>
+        <button type="submit" class="btn-brand">@(isEdit ? "Сохранить" : "Добавить")</button>
+    </form>
+</div>

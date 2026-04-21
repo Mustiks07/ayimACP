@@ -1,0 +1,47 @@
+@model List<CosmeticsShop.Domain.Entities.Order>
+@{
+    ViewData["Title"] = L.T("admin.orders");
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 style="font-size:1.5rem;font-weight:800;margin-bottom:1.5rem">📦 @L.T("admin.orders")</h1>
+
+<div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Пользователь</th>
+                <th>Дата</th>
+                <th>Позиций</th>
+                <th>Сумма</th>
+                <th>Статус</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                var (label, css) = order.Status switch
+                {
+                    CosmeticsShop.Domain.Enums.OrderStatusEnum.Pending    => (L.T("order.status_pending"),    "status-pending"),
+                    CosmeticsShop.Domain.Enums.OrderStatusEnum.Processing => (L.T("order.status_processing"), "status-processing"),
+                    CosmeticsShop.Domain.Enums.OrderStatusEnum.Shipped    => (L.T("order.status_shipped"),    "status-shipped"),
+                    CosmeticsShop.Domain.Enums.OrderStatusEnum.Delivered  => (L.T("order.status_delivered"),  "status-delivered"),
+                    _                                                      => (L.T("order.status_cancelled"),  "status-cancelled")
+                };
+                <tr>
+                    <td><strong>#@order.Id</strong></td>
+                    <td>@order.User?.UserName</td>
+                    <td style="font-size:0.85rem">@order.DateCreated.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@order.Items.Count</td>
+                    <td>@order.Total.ToString("N0") ₸</td>
+                    <td><span class="order-status @css">@label</span></td>
+                    <td>
+                        <a href="/admin/orders/details/@order.Id" class="vote-btn text-brand">Детали</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

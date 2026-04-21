@@ -1,0 +1,49 @@
+@model List<CosmeticsShop.Domain.Entities.Order>
+@{
+    ViewData["Title"] = L.T("order.my_orders");
+}
+
+<div class="container py-4">
+    <h1 class="section-title">@L.T("order.my_orders")</h1>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <div style="font-size:4rem">📦</div>
+            <p class="text-muted mt-2">@L.T("order.no_orders")</p>
+            <a href="/products" class="btn-brand">🛍️ @L.T("nav.products")</a>
+        </div>
+    }
+    else
+    {
+        @foreach (var order in Model)
+        {
+            var (label, css) = order.Status switch
+            {
+                CosmeticsShop.Domain.Enums.OrderStatusEnum.Pending    => (L.T("order.status_pending"),    "status-pending"),
+                CosmeticsShop.Domain.Enums.OrderStatusEnum.Processing => (L.T("order.status_processing"), "status-processing"),
+                CosmeticsShop.Domain.Enums.OrderStatusEnum.Shipped    => (L.T("order.status_shipped"),    "status-shipped"),
+                CosmeticsShop.Domain.Enums.OrderStatusEnum.Delivered  => (L.T("order.status_delivered"),  "status-delivered"),
+                CosmeticsShop.Domain.Enums.OrderStatusEnum.Cancelled  => (L.T("order.status_cancelled"),  "status-cancelled"),
+                _ => ("", "")
+            };
+            <div class="order-card">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                    <div>
+                        <div style="font-weight:700">@L.T("order.number") #@order.Id</div>
+                        <div style="font-size:0.85rem;color:var(--text-muted)">@order.DateCreated.ToString("dd.MM.yyyy HH:mm")</div>
+                    </div>
+                    <span class="order-status @css">@label</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div style="color:var(--text-muted);font-size:0.9rem">
+                        @order.Items.Count поз. · @order.Total.ToString("N0") ₸
+                    </div>
+                    <a href="/orders/details/@order.Id" class="btn-outline-brand" style="font-size:0.85rem;padding:0.3rem 0.8rem">
+                        @L.T("order.details")
+                    </a>
+                </div>
+            </div>
+        }
+    }
+</div>

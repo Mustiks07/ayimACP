@@ -1,0 +1,85 @@
+@model CreateReviewViewModel
+@{
+    ViewData["Title"] = L.T("rev.page_title");
+}
+
+<div class="container py-4">
+    <div style="max-width:600px;margin:0 auto">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/products">@L.T("prod.title")</a></li>
+                <li class="breadcrumb-item"><a href="/products/show/@Model.ProductId">@Model.ProductTitle</a></li>
+                <li class="breadcrumb-item active">@L.T("rev.page_title")</li>
+            </ol>
+        </nav>
+
+        <h1 class="section-title">@L.T("rev.page_title")</h1>
+        <p style="color:var(--text-muted)">На товар: <strong>@Model.ProductTitle</strong></p>
+
+        <div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem">
+            <form method="post" action="/reviews/new">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ProductId" />
+                <input type="hidden" asp-for="ProductTitle" />
+
+                <div class="mb-4">
+                    <label class="form-label">@L.T("rev.rating") *</label>
+                    <div class="star-input" id="star-overall">
+                        @for (int s = 5; s >= 1; s--)
+                        {
+                            <input type="radio" name="Rating" id="r@(s)" value="@s" @(Model.Rating == s ? "checked" : "") required />
+                            <label for="r@(s)">★</label>
+                        }
+                    </div>
+                    <span asp-validation-for="Rating" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">@L.T("rev.quality")</label>
+                    <div class="star-input">
+                        @for (int s = 5; s >= 1; s--)
+                        {
+                            <input type="radio" name="QualityRating" id="q@(s)" value="@s" @(Model.QualityRating == s ? "checked" : "") />
+                            <label for="q@(s)" style="font-size:1.4rem">★</label>
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">@L.T("rev.packaging")</label>
+                    <div class="star-input">
+                        @for (int s = 5; s >= 1; s--)
+                        {
+                            <input type="radio" name="PackagingRating" id="p@(s)" value="@s" @(Model.PackagingRating == s ? "checked" : "") />
+                            <label for="p@(s)" style="font-size:1.4rem">★</label>
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">@L.T("rev.value_price")</label>
+                    <div class="star-input">
+                        @for (int s = 5; s >= 1; s--)
+                        {
+                            <input type="radio" name="ValueRating" id="v@(s)" value="@s" @(Model.ValueRating == s ? "checked" : "") />
+                            <label for="v@(s)" style="font-size:1.4rem">★</label>
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">@L.T("rev.title_label") *</label>
+                    <input asp-for="Title" class="form-control" placeholder="Краткий заголовок отзыва" />
+                    <span asp-validation-for="Title" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">@L.T("rev.text_label")</label>
+                    <textarea asp-for="Text" class="form-control" rows="5" placeholder="Расскажите подробнее о товаре..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-brand w-100">✅ @L.T("rev.submit")</button>
+            </form>
+        </div>
+    </div>
+</div>

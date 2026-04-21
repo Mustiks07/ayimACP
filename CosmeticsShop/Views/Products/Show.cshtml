@@ -1,0 +1,254 @@
+@model CosmeticsShop.Domain.Entities.Product
+@{
+    ViewData["Title"] = Model.Title;
+    var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    var reviews = Model.Reviews.OrderByDescending(r => r.DateCreated).ToList();
+
+    double avgQuality   = reviews.Count > 0 ? reviews.Average(r => r.QualityRating) : 0;
+    double avgPackaging = reviews.Count > 0 ? reviews.Average(r => r.PackagingRating) : 0;
+    double avgValue     = reviews.Count > 0 ? reviews.Average(r => r.ValueRating) : 0;
+
+    int[] starDist = new int[5];
+    foreach (var r in reviews) if (r.Rating >= 1 && r.Rating <= 5) starDist[r.Rating - 1]++;
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Главная</a></li>
+            <li class="breadcrumb-item"><a href="/products">@L.T("prod.title")</a></li>
+            <li class="breadcrumb-item active">@Model.Title</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Left: product info -->
+        <div class="col-12 col-md-8">
+            <div class="row g-4">
+                <div class="col-12 col-sm-5">
+                    <div class="card-img-wrap" style="aspect-ratio:1;border-radius:var(--radius)">
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <img src="@Model.ImageUrl" alt="@Model.Title" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius)" />
+                        }
+                        else
+                        {
+                            <div class="d-flex align-items-center justify-content-center h-100" style="font-size:5rem;background:#F1F5F9;border-radius:var(--radius)">💄</div>
+                        }
+                    </div>
+                </div>
+                <div class="col-12 col-sm-7">
+                    <div class="d-flex flex-wrap gap-1 mb-2">
+                        @if (Model.IsBestseller) { <span class="badge-bestseller">@L.T("prod.bestseller")</span> }
+                        @if (Model.IsVerified)   { <span class="badge-verified">@L.T("prod.verified")</span> }
+                        @if (!Model.InStock)      { <span class="badge-out-of-stock">@L.T("prod.out_of_stock")</span> }
+                    </div>
+
+                    <div style="color:var(--brand);font-size:0.85rem;font-weight:600;text-transform:uppercase">
+                        @Model.Brand.Title
+                    </div>
+                    <h1 style="font-size:1.75rem;font-weight:800;margin:0.25rem 0 0.5rem">@Model.Title</h1>
+                    <div style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.5rem">
+                        📂 @Model.Category.IconEmoji @Model.Category.Title
+                    </div>
+
+                    @if (reviews.Count > 0)
+                    {
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <span class="stars">@(new string('★', (int)Math.Round(Model.AverageRating)))</span>
+                            <span style="font-weight:700;color:var(--brand)">@Model.AverageRating.ToString("0.0")</span>
+                            <span style="color:var(--text-muted);font-size:0.85rem">(@Model.ReviewCount @L.T("prod.reviews_sfx"))</span>
+                        </div>
+                    }
+
+                    <div style="font-size:2rem;font-weight:800;color:var(--brand);margin:1rem 0">
+                        @Model.Price.ToString("N0") ₸
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Volume))
+                    {
+                        <div style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.25rem">
+                            📦 @L.T("prod.volume"): <strong>@Model.Volume</strong>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.SkinType))
+                    {
+                        <div style="font-size:0.9rem;color:var(--text-muted);margin-bottom:1rem">
+                            🌿 @L.T("prod.skin_type"): <strong>@Model.SkinType</strong>
+                        </div>
+                    }
+
+                    @if (User.Identity?.IsAuthenticated == true && Model.InStock)
+                    {
+                        <form method="post" action="/cart/add" class="d-flex gap-2 flex-wrap">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="productId" value="@Model.Id" />
+                            <div class="qty-control">
+                                <button type="button" class="qty-dec">−</button>
+                                <input type="number" name="quantity" value="1" min="1" max="99" />
+                                <button type="button" class="qty-inc">+</button>
+                            </div>
+                            <button type="submit" class="btn-brand">🛒 @L.T("prod.add_to_cart")</button>
+                        </form>
+                        <div class="mt-2">
+                            <a href="/reviews/new/@Model.Id" class="btn-outline-brand" style="font-size:0.9rem">
+                                ✍️ @L.T("prod.write_review")
+                            </a>
+                        </div>
+                    }
+                    else if (User.Identity?.IsAuthenticated != true)
+                    {
+                        <a href="/account/login" class="btn-brand">@L.T("nav.login")</a>
+                    }
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <div class="mt-4">
+                    <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:0.5rem">@L.T("prod.composition")</h3>
+                    <p style="color:var(--text-muted);line-height:1.7">@Model.Description</p>
+                </div>
+            }
+
+            <!-- Reviews -->
+            <div class="mt-4">
+                <h2 class="section-title" style="font-size:1.4rem">@L.T("prod.reviews_title")</h2>
+
+                @if (!reviews.Any())
+                {
+                    <div class="text-center py-4" style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius)">
+                        <div style="font-size:3rem">💬</div>
+                        <p style="color:var(--text-muted)">@L.T("rev.no_reviews")</p>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <a href="/reviews/new/@Model.Id" class="btn-brand">@L.T("prod.write_review")</a>
+                        }
+                        else
+                        {
+                            <p style="color:var(--text-muted);font-size:0.9rem">@L.T("rev.login_required")</p>
+                        }
+                    </div>
+                }
+                else
+                {
+                    @foreach (var review in reviews)
+                    {
+                        var usefulCount    = review.Votes.Count(v => v.VoteType == CosmeticsShop.Domain.Enums.ReviewVoteTypeEnum.Useful);
+                        var notUsefulCount = review.Votes.Count(v => v.VoteType == CosmeticsShop.Domain.Enums.ReviewVoteTypeEnum.NotUseful);
+                        var userVote = userId != null ? review.Votes.FirstOrDefault(v => v.UserId == userId) : null;
+
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div>
+                                    <span class="review-author">@review.Author.UserName</span>
+                                    @if (review.VerifiedPurchase)
+                                    {
+                                        <span class="badge-verified ms-2">@L.T("rev.verified_purchase")</span>
+                                    }
+                                    <div class="d-flex align-items-center gap-1 mt-1">
+                                        <span class="stars sm">@(new string('★', review.Rating))</span>
+                                        <span style="font-size:0.75rem;color:var(--text-muted)">@review.DateCreated.ToString("dd.MM.yyyy")</span>
+                                    </div>
+                                </div>
+                                @if (userId == review.AuthorId || User.IsInRole("Admin"))
+                                {
+                                    <form method="post" action="/reviews/delete/@review.Id">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="vote-btn" style="color:#EF4444"
+                                                onclick="return confirm('Удалить отзыв?')">
+                                            🗑️ @L.T("rev.delete")
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+
+                            <div class="review-title">@review.Title</div>
+                            @if (!string.IsNullOrEmpty(review.Text))
+                            {
+                                <div class="review-text">@review.Text</div>
+                            }
+
+                            <div class="review-subrating">
+                                <span class="subrating-item">@L.T("rev.quality"): <strong>@review.QualityRating/5</strong></span>
+                                <span class="subrating-item">@L.T("rev.packaging"): <strong>@review.PackagingRating/5</strong></span>
+                                <span class="subrating-item">@L.T("rev.value_price"): <strong>@review.ValueRating/5</strong></span>
+                            </div>
+
+                            @if (User.Identity?.IsAuthenticated == true && userId != review.AuthorId)
+                            {
+                                <div class="d-flex gap-2 mt-2">
+                                    <form method="post" action="/reviews/vote">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="reviewId" value="@review.Id" />
+                                        <input type="hidden" name="voteType" value="0" />
+                                        <button type="submit" class="vote-btn @(userVote?.VoteType == CosmeticsShop.Domain.Enums.ReviewVoteTypeEnum.Useful ? "text-brand" : "")">
+                                            👍 @L.T("rev.useful") (@usefulCount)
+                                        </button>
+                                    </form>
+                                    <form method="post" action="/reviews/vote">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="reviewId" value="@review.Id" />
+                                        <input type="hidden" name="voteType" value="1" />
+                                        <button type="submit" class="vote-btn">
+                                            👎 @L.T("rev.not_useful") (@notUsefulCount)
+                                        </button>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Right: rating sidebar -->
+        <div class="col-12 col-md-4">
+            <div class="rating-summary">
+                <div class="text-center mb-3">
+                    <div class="rating-big">@(reviews.Count > 0 ? Model.AverageRating.ToString("0.0") : "—")</div>
+                    <div class="stars mt-1">@(reviews.Count > 0 ? new string('★', (int)Math.Round(Model.AverageRating)) : "☆☆☆☆☆")</div>
+                    <div style="font-size:0.85rem;color:var(--text-muted);margin-top:0.25rem">
+                        @Model.ReviewCount @L.T("prod.reviews_sfx")
+                    </div>
+                </div>
+
+                @if (reviews.Count > 0)
+                {
+                    @for (int star = 5; star >= 1; star--)
+                    {
+                        var count = starDist[star - 1];
+                        var pct   = (double)count / reviews.Count * 100;
+                        <div class="rating-bar-row">
+                            <span class="bar-label">@star</span>
+                            <div class="bar"><div class="bar-fill" style="width:@pct.ToString("0")%"></div></div>
+                            <span style="font-size:0.75rem;color:var(--text-muted);width:20px">@count</span>
+                        </div>
+                    }
+
+                    <div class="mt-3" style="border-top:1px solid var(--border);padding-top:0.75rem">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span style="font-size:0.85rem">@L.T("rev.quality")</span>
+                            <span class="stars sm" style="font-size:0.85rem">@avgQuality.ToString("0.0")</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span style="font-size:0.85rem">@L.T("rev.packaging")</span>
+                            <span class="stars sm" style="font-size:0.85rem">@avgPackaging.ToString("0.0")</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span style="font-size:0.85rem">@L.T("rev.value_price")</span>
+                            <span class="stars sm" style="font-size:0.85rem">@avgValue.ToString("0.0")</span>
+                        </div>
+                    </div>
+                }
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a href="/reviews/new/@Model.Id" class="btn-brand w-100 text-center mt-3 d-block">
+                        ✍️ @L.T("prod.write_review")
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+@model CosmeticsShop.Domain.Entities.Order
+@{
+    ViewData["Title"] = $"Заказ #{Model.Id}";
+    var (label, css) = Model.Status switch
+    {
+        CosmeticsShop.Domain.Enums.OrderStatusEnum.Pending    => (L.T("order.status_pending"),    "status-pending"),
+        CosmeticsShop.Domain.Enums.OrderStatusEnum.Processing => (L.T("order.status_processing"), "status-processing"),
+        CosmeticsShop.Domain.Enums.OrderStatusEnum.Shipped    => (L.T("order.status_shipped"),    "status-shipped"),
+        CosmeticsShop.Domain.Enums.OrderStatusEnum.Delivered  => (L.T("order.status_delivered"),  "status-delivered"),
+        CosmeticsShop.Domain.Enums.OrderStatusEnum.Cancelled  => (L.T("order.status_cancelled"),  "status-cancelled"),
+        _ => ("", "")
+    };
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/orders">@L.T("order.my_orders")</a></li>
+            <li class="breadcrumb-item active">@L.T("order.number") #@Model.Id</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+        <h1 class="section-title mb-0">@L.T("order.number") #@Model.Id</h1>
+        <span class="order-status @css">@label</span>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12 col-md-8">
+            @foreach (var item in Model.Items)
+            {
+                <div class="cart-item">
+                    @if (!string.IsNullOrEmpty(item.Product?.ImageUrl))
+                    {
+                        <img src="@item.Product.ImageUrl" alt="@item.Product.Title" />
+                    }
+                    <div class="item-info">
+                        <div class="item-brand">@item.Product?.Brand?.Title</div>
+                        <div class="item-title">@item.Product?.Title</div>
+                        <div style="font-size:0.85rem;color:var(--text-muted)">× @item.Quantity</div>
+                    </div>
+                    <div class="item-price">@((item.PriceAtPurchase * item.Quantity).ToString("N0")) ₸</div>
+                </div>
+            }
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="rating-summary">
+                <div class="mb-2">
+                    <div style="font-size:0.85rem;color:var(--text-muted)">@L.T("order.date")</div>
+                    <div style="font-weight:600">@Model.DateCreated.ToString("dd.MM.yyyy HH:mm")</div>
+                </div>
+                <div class="mb-2">
+                    <div style="font-size:0.85rem;color:var(--text-muted)">@L.T("order.address")</div>
+                    <div style="font-weight:600">@Model.DeliveryAddress</div>
+                </div>
+                <div class="mb-2">
+                    <div style="font-size:0.85rem;color:var(--text-muted)">@L.T("order.phone")</div>
+                    <div style="font-weight:600">@Model.Phone</div>
+                </div>
+                @if (!string.IsNullOrEmpty(Model.Comment))
+                {
+                    <div class="mb-2">
+                        <div style="font-size:0.85rem;color:var(--text-muted)">@L.T("order.comment")</div>
+                        <div style="font-weight:600">@Model.Comment</div>
+                    </div>
+                }
+                <hr />
+                <div class="d-flex justify-content-between align-items-center">
+                    <strong>@L.T("cart.total")</strong>
+                    <span style="font-size:1.5rem;font-weight:800;color:var(--brand)">@Model.Total.ToString("N0") ₸</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

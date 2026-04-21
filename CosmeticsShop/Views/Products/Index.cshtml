@@ -1,0 +1,146 @@
+@model ProductFilterViewModel
+@{
+    ViewData["Title"] = L.T("prod.title");
+}
+
+<div class="container py-4">
+    <h1 class="section-title">@L.T("prod.title")</h1>
+
+    <!-- Filters -->
+    <div class="filter-card">
+        <form method="get" action="/products">
+            <div class="row g-2 align-items-end">
+                <div class="col-12 col-md-3">
+                    <label class="form-label">@L.T("prod.search")</label>
+                    <input type="text" name="Search" value="@Model.Search" class="form-control" placeholder="@L.T("prod.search")" />
+                </div>
+                <div class="col-6 col-md-2">
+                    <label class="form-label">@L.T("prod.all_cats")</label>
+                    <select name="CategoryId" class="form-select">
+                        <option value="">@L.T("prod.all_cats")</option>
+                        @foreach (var c in Model.Categories)
+                        {
+                            <option value="@c.Id" selected="@(Model.CategoryId == c.Id ? "selected" : null)">
+                                @c.IconEmoji @c.Title
+                            </option>
+                        }
+                    </select>
+                </div>
+                <div class="col-6 col-md-2">
+                    <label class="form-label">@L.T("prod.all_brands")</label>
+                    <select name="BrandId" class="form-select">
+                        <option value="">@L.T("prod.all_brands")</option>
+                        @foreach (var b in Model.Brands)
+                        {
+                            <option value="@b.Id" selected="@(Model.BrandId == b.Id ? "selected" : null)">@b.Title</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-6 col-md-2">
+                    <label class="form-label">@L.T("prod.any_price")</label>
+                    <select name="PriceRange" class="form-select">
+                        <option value="">@L.T("prod.any_price")</option>
+                        <option value="0" selected="@(Model.PriceRange == PriceRangeEnum.Budget ? "selected" : null)">@L.T("price.budget")</option>
+                        <option value="1" selected="@(Model.PriceRange == PriceRangeEnum.Medium ? "selected" : null)">@L.T("price.medium")</option>
+                        <option value="2" selected="@(Model.PriceRange == PriceRangeEnum.Premium ? "selected" : null)">@L.T("price.premium")</option>
+                        <option value="3" selected="@(Model.PriceRange == PriceRangeEnum.Luxury ? "selected" : null)">@L.T("price.luxury")</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-2">
+                    <label class="form-label">@L.T("prod.sort")</label>
+                    <select name="Sort" class="form-select">
+                        <option value="" selected="@(string.IsNullOrEmpty(Model.Sort) ? "selected" : null)">@L.T("prod.sort_new")</option>
+                        <option value="rating" selected="@(Model.Sort == "rating" ? "selected" : null)">@L.T("prod.sort_rating")</option>
+                        <option value="price_asc" selected="@(Model.Sort == "price_asc" ? "selected" : null)">@L.T("prod.sort_price_asc")</option>
+                        <option value="price_desc" selected="@(Model.Sort == "price_desc" ? "selected" : null)">@L.T("prod.sort_price_desc")</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-1 d-flex align-items-end gap-1">
+                    <div class="form-check align-self-center">
+                        <input class="form-check-input" type="checkbox" name="InStockOnly" value="true" id="inStock"
+                               @(Model.InStockOnly ? "checked" : "") />
+                        <label class="form-check-label" for="inStock" style="font-size:0.8rem">В наличии</label>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex gap-2 mt-3">
+                <button type="submit" class="btn-brand">@L.T("prod.apply")</button>
+                <a href="/products" class="btn-outline-brand">@L.T("prod.reset")</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Results count -->
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1rem">
+        @L.T("prod.found"): <strong>@Model.Products.Count</strong> @L.T("prod.items")
+    </p>
+
+    <!-- Products grid -->
+    @if (!Model.Products.Any())
+    {
+        <div class="text-center py-5">
+            <div style="font-size:4rem">🔍</div>
+            <p class="text-muted mt-2">Товары не найдены. Попробуйте изменить фильтры.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var p in Model.Products)
+            {
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="product-card">
+                        <a href="/products/show/@p.Id" class="text-decoration-none">
+                            <div class="card-img-wrap">
+                                @if (!string.IsNullOrEmpty(p.ImageUrl))
+                                {
+                                    <img src="@p.ImageUrl" alt="@p.Title" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <div class="d-flex align-items-center justify-content-center h-100" style="font-size:3rem">💄</div>
+                                }
+                                <div class="position-absolute top-0 start-0 p-1 d-flex gap-1 flex-wrap">
+                                    @if (p.IsBestseller) { <span class="badge-bestseller">@L.T("prod.bestseller")</span> }
+                                    @if (!p.InStock)      { <span class="badge-out-of-stock">@L.T("prod.out_of_stock")</span> }
+                                </div>
+                            </div>
+                        </a>
+                        <div class="card-body">
+                            <div class="card-brand">@p.BrandName</div>
+                            <a href="/products/show/@p.Id" class="text-decoration-none">
+                                <div class="card-title">@p.Title</div>
+                            </a>
+                            @if (p.ReviewCount > 0)
+                            {
+                                <div class="d-flex align-items-center gap-1 mb-1">
+                                    <span class="stars sm">@(new string('★', (int)Math.Round(p.AverageRating)))</span>
+                                    <span style="font-size:0.75rem;color:var(--text-muted)">(@p.ReviewCount)</span>
+                                </div>
+                            }
+                            <div class="card-price">@p.Price.ToString("N0") ₸</div>
+                            <div class="card-footer-inner">
+                                @if (User.Identity?.IsAuthenticated == true && p.InStock)
+                                {
+                                    <form method="post" action="/cart/add">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="productId" value="@p.Id" />
+                                        <button type="submit" class="btn-brand w-100" style="font-size:0.85rem">
+                                            🛒 @L.T("prod.add_to_cart")
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <a href="/products/show/@p.Id" class="btn-outline-brand w-100 text-center" style="font-size:0.85rem">
+                                        @L.T("prod.details")
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

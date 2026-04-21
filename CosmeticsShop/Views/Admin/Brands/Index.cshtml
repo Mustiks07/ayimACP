@@ -1,0 +1,40 @@
+@model List<CosmeticsShop.Domain.Entities.Brand>
+@{
+    ViewData["Title"] = L.T("admin.brands");
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 style="font-size:1.5rem;font-weight:800">🏷️ @L.T("admin.brands")</h1>
+    <a href="/admin/brands/new" class="btn-brand">+ @L.T("admin.add")</a>
+</div>
+
+<div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+    <table class="admin-table">
+        <thead>
+            <tr><th>ID</th><th>Название</th><th>Страна</th><th>Верифицирован</th><th>Описание</th><th></th></tr>
+        </thead>
+        <tbody>
+            @foreach (var b in Model)
+            {
+                <tr>
+                    <td>@b.Id</td>
+                    <td><strong>@b.Title</strong></td>
+                    <td>@b.Country</td>
+                    <td>@(b.IsVerified ? "✅" : "—")</td>
+                    <td style="font-size:0.85rem;color:var(--text-muted);max-width:200px">@b.Description</td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="/admin/brands/edit/@b.Id" class="vote-btn text-brand">Изменить</a>
+                            <form method="post" action="/admin/brands/delete/@b.Id" style="display:inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="vote-btn" style="color:#EF4444"
+                                        onclick="return confirm('Удалить бренд?')">Удалить</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

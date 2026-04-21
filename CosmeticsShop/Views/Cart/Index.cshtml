@@ -1,0 +1,83 @@
+@model CosmeticsShop.Domain.Entities.Cart
+@{
+    ViewData["Title"] = L.T("cart.title");
+    var total = Model.Items.Sum(i => i.Product.Price * i.Quantity);
+}
+
+<div class="container py-4">
+    <h1 class="section-title">🛒 @L.T("cart.title")</h1>
+
+    @if (!Model.Items.Any())
+    {
+        <div class="text-center py-5">
+            <div style="font-size:5rem">🛒</div>
+            <p class="text-muted mt-2">@L.T("cart.empty")</p>
+            <a href="/products" class="btn-brand">@L.T("cart.continue")</a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            <div class="col-12 col-md-8">
+                @foreach (var item in Model.Items)
+                {
+                    <div class="cart-item">
+                        <img src="@(item.Product.ImageUrl ?? "")" alt="@item.Product.Title"
+                             onerror="this.style.display='none'" />
+                        <div class="item-info">
+                            <div class="item-brand">@item.Product.Brand?.Title</div>
+                            <a href="/products/show/@item.ProductId" class="item-title text-decoration-none d-block">
+                                @item.Product.Title
+                            </a>
+                            @if (!string.IsNullOrEmpty(item.Product.Volume))
+                            {
+                                <div style="font-size:0.8rem;color:var(--text-muted)">@item.Product.Volume</div>
+                            }
+                        </div>
+
+                        <!-- Qty update form -->
+                        <form method="post" action="/cart/update" class="qty-control">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="itemId" value="@item.Id" />
+                            <button type="button" class="qty-dec">−</button>
+                            <input type="number" name="quantity" value="@item.Quantity" min="0" max="99" />
+                            <button type="button" class="qty-inc">+</button>
+                        </form>
+
+                        <div class="item-price">@((item.Product.Price * item.Quantity).ToString("N0")) ₸</div>
+
+                        <form method="post" action="/cart/remove">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="itemId" value="@item.Id" />
+                            <button type="submit" class="vote-btn" style="color:#EF4444" title="@L.T("cart.remove")">✕</button>
+                        </form>
+                    </div>
+                }
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="rating-summary">
+                    <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem">@L.T("order.summary")</h3>
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="d-flex justify-content-between mb-1" style="font-size:0.9rem">
+                            <span>@item.Product.Title × @item.Quantity</span>
+                            <span>@((item.Product.Price * item.Quantity).ToString("N0")) ₸</span>
+                        </div>
+                    }
+                    <hr />
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span style="font-weight:700">@L.T("cart.total")</span>
+                        <span style="font-size:1.5rem;font-weight:800;color:var(--brand)">@total.ToString("N0") ₸</span>
+                    </div>
+                    <a href="/orders/checkout" class="btn-brand w-100 text-center mt-3 d-block">
+                        @L.T("cart.checkout")
+                    </a>
+                    <a href="/products" class="btn-outline-brand w-100 text-center mt-2 d-block">
+                        @L.T("cart.continue")
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

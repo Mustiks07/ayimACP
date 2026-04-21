@@ -1,0 +1,48 @@
+@model CosmeticsShop.Models.LoginViewModel
+@{
+    ViewData["Title"] = L.T("admin.login");
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="@L.Lang">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@L.T("admin.login") — Beauty Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body style="background:linear-gradient(135deg,#FFF7ED,#FED7AA);min-height:100vh;display:flex;align-items:center">
+    <div class="container">
+        <div style="max-width:380px;margin:0 auto">
+            <div class="text-center mb-4">
+                <div style="font-size:3rem">🔐</div>
+                <h1 style="font-size:1.5rem;font-weight:800">@L.T("admin.login")</h1>
+                <p style="color:var(--text-muted)">Beauty Shop Admin</p>
+            </div>
+
+            <div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;box-shadow:var(--shadow)">
+                <form method="post" action="/admin/account/login">
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="All" class="alert-error-beauty mb-3"></div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Логин</label>
+                        <input asp-for="Username" class="form-control" placeholder="admin" autofocus />
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Пароль</label>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" />
+                    </div>
+                    <button type="submit" class="btn-brand w-100">Войти</button>
+                </form>
+            </div>
+
+            <p class="text-center mt-3" style="font-size:0.85rem">
+                <a href="/" style="color:var(--text-muted)">← На сайт</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

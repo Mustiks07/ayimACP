@@ -1,0 +1,43 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = L.T("nav.login");
+}
+
+<div class="container py-5">
+    <div style="max-width:420px;margin:0 auto">
+        <div class="text-center mb-4">
+            <div style="font-size:3rem">💄</div>
+            <h1 style="font-size:1.75rem;font-weight:800">@L.T("nav.login")</h1>
+            <p style="color:var(--text-muted)">Beauty Shop</p>
+        </div>
+
+        <div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);padding:2rem">
+            <form method="post" asp-action="Login">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ReturnUrl" />
+
+                <div asp-validation-summary="All" class="alert-error-beauty mb-3" style="display:@(ViewData.ModelState.IsValid ? "none" : "block")"></div>
+
+                <div class="mb-3">
+                    <label class="form-label">Имя пользователя</label>
+                    <input asp-for="Username" class="form-control" placeholder="username" autofocus />
+                    <span asp-validation-for="Username" class="text-danger small"></span>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Пароль</label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+                <div class="mb-3 form-check">
+                    <input asp-for="RememberMe" class="form-check-input" type="checkbox" />
+                    <label class="form-check-label">Запомнить меня</label>
+                </div>
+                <button type="submit" class="btn-brand w-100">@L.T("nav.login")</button>
+            </form>
+
+            <p class="text-center mt-3" style="font-size:0.9rem;color:var(--text-muted)">
+                Нет аккаунта? <a href="/account/register" class="text-brand fw-bold">@L.T("nav.register")</a>
+            </p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+@model List<CosmeticsShop.Domain.Entities.Category>
+@{
+    ViewData["Title"] = L.T("admin.categories");
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 style="font-size:1.5rem;font-weight:800">📂 @L.T("admin.categories")</h1>
+    <a href="/admin/categories/new" class="btn-brand">+ @L.T("admin.add")</a>
+</div>
+
+<div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+    <table class="admin-table">
+        <thead>
+            <tr><th>ID</th><th>Эмодзи</th><th>Название</th><th></th></tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td>@c.Id</td>
+                    <td style="font-size:1.5rem">@c.IconEmoji</td>
+                    <td><strong>@c.Title</strong></td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="/admin/categories/edit/@c.Id" class="vote-btn text-brand">Изменить</a>
+                            <form method="post" action="/admin/categories/delete/@c.Id" style="display:inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="vote-btn" style="color:#EF4444"
+                                        onclick="return confirm('Удалить категорию?')">Удалить</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

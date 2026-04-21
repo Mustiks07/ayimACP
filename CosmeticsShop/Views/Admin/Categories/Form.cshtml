@@ -1,0 +1,28 @@
+@model CosmeticsShop.Domain.Entities.Category
+@{
+    var isEdit = Model.Id > 0;
+    ViewData["Title"] = isEdit ? "Редактировать категорию" : "Добавить категорию";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a href="/admin/categories" class="btn-outline-brand" style="font-size:0.85rem">← Назад</a>
+    <h1 style="font-size:1.5rem;font-weight:800;margin:0">@ViewData["Title"]</h1>
+</div>
+
+<div style="max-width:400px;background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);padding:2rem">
+    <form method="post" action="@(isEdit ? $"/admin/categories/edit/{Model.Id}" : "/admin/categories/new")">
+        @Html.AntiForgeryToken()
+        @if (isEdit) { <input type="hidden" name="Id" value="@Model.Id" /> }
+
+        <div class="mb-3">
+            <label class="form-label">Название *</label>
+            <input name="Title" value="@Model.Title" class="form-control" required />
+        </div>
+        <div class="mb-4">
+            <label class="form-label">Эмодзи</label>
+            <input name="IconEmoji" value="@Model.IconEmoji" class="form-control" placeholder="💄" />
+        </div>
+        <button type="submit" class="btn-brand">@(isEdit ? "Сохранить" : "Добавить")</button>
+    </form>
+</div>

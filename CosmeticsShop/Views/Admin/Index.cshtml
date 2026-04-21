@@ -1,0 +1,88 @@
+@{
+    ViewData["Title"] = L.T("admin.dashboard");
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var recentOrders = ViewBag.RecentOrders as List<CosmeticsShop.Domain.Entities.Order> ?? new();
+    var newReviews   = ViewBag.NewReviews   as List<CosmeticsShop.Domain.Entities.Review> ?? new();
+}
+
+<h1 style="font-size:1.5rem;font-weight:800;margin-bottom:1.5rem">📊 @L.T("admin.dashboard")</h1>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="admin-card">
+            <div class="admin-stat-num">@ViewBag.TotalProducts</div>
+            <div class="admin-stat-label">@L.T("admin.total_products")</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="admin-card">
+            <div class="admin-stat-num">@ViewBag.TotalOrders</div>
+            <div class="admin-stat-label">@L.T("admin.total_orders")</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="admin-card">
+            <div class="admin-stat-num">@ViewBag.TodayOrders</div>
+            <div class="admin-stat-label">@L.T("admin.today_orders")</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="admin-card">
+            <div class="admin-stat-num">@(((decimal)ViewBag.MonthRevenue).ToString("N0")) ₸</div>
+            <div class="admin-stat-label">@L.T("admin.month_revenue")</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-12 col-md-7">
+        <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem">📦 @L.T("admin.recent_orders")</h2>
+        <div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Пользователь</th>
+                        <th>Сумма</th>
+                        <th>Статус</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in recentOrders)
+                    {
+                        var (label, css) = order.Status switch
+                        {
+                            CosmeticsShop.Domain.Enums.OrderStatusEnum.Pending    => (L.T("order.status_pending"),    "status-pending"),
+                            CosmeticsShop.Domain.Enums.OrderStatusEnum.Processing => (L.T("order.status_processing"), "status-processing"),
+                            CosmeticsShop.Domain.Enums.OrderStatusEnum.Shipped    => (L.T("order.status_shipped"),    "status-shipped"),
+                            CosmeticsShop.Domain.Enums.OrderStatusEnum.Delivered  => (L.T("order.status_delivered"),  "status-delivered"),
+                            _                                                      => (L.T("order.status_cancelled"),  "status-cancelled")
+                        };
+                        <tr>
+                            <td>#@order.Id</td>
+                            <td>@order.User?.UserName</td>
+                            <td>@order.Total.ToString("N0") ₸</td>
+                            <td><span class="order-status @css">@label</span></td>
+                            <td><a href="/admin/orders/details/@order.Id" class="text-brand" style="font-size:0.85rem">Детали</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-5">
+        <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem">💬 @L.T("admin.new_reviews")</h2>
+        @foreach (var review in newReviews)
+        {
+            <div class="review-card" style="margin-bottom:0.5rem">
+                <div style="font-size:0.8rem;color:var(--brand);font-weight:600">@review.Product?.Title</div>
+                <div style="font-weight:700;font-size:0.9rem">@review.Title</div>
+                <div style="font-size:0.8rem;color:var(--text-muted)">
+                    @review.Author?.UserName · <span class="stars sm">@(new string('★', review.Rating))</span>
+                </div>
+            </div>
+        }
+    </div>
+</div>

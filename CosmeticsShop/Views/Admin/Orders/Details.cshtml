@@ -1,0 +1,87 @@
+@model CosmeticsShop.Domain.Entities.Order
+@{
+    ViewData["Title"] = $"Заказ #{Model.Id}";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var (label, css) = Model.Status switch
+    {
+        CosmeticsShop.Domain.Enums.OrderStatusEnum.Pending    => (L.T("order.status_pending"),    "status-pending"),
+        CosmeticsShop.Domain.Enums.OrderStatusEnum.Processing => (L.T("order.status_processing"), "status-processing"),
+        CosmeticsShop.Domain.Enums.OrderStatusEnum.Shipped    => (L.T("order.status_shipped"),    "status-shipped"),
+        CosmeticsShop.Domain.Enums.OrderStatusEnum.Delivered  => (L.T("order.status_delivered"),  "status-delivered"),
+        _                                                      => (L.T("order.status_cancelled"),  "status-cancelled")
+    };
+}
+
+<div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+    <a href="/admin/orders" class="btn-outline-brand" style="font-size:0.85rem">← Назад</a>
+    <h1 style="font-size:1.5rem;font-weight:800;margin:0">Заказ #@Model.Id</h1>
+    <span class="order-status @css">@label</span>
+</div>
+
+<div class="row g-4">
+    <div class="col-12 col-md-8">
+        <div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem">
+            <table class="admin-table">
+                <thead>
+                    <tr><th>Товар</th><th>Кол-во</th><th>Цена</th><th>Итого</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>
+                                <div style="font-weight:600">@item.Product?.Title</div>
+                                <div style="font-size:0.8rem;color:var(--text-muted)">@item.Product?.Brand?.Title</div>
+                            </td>
+                            <td>@item.Quantity</td>
+                            <td>@item.PriceAtPurchase.ToString("N0") ₸</td>
+                            <td>@((item.PriceAtPurchase * item.Quantity).ToString("N0")) ₸</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+        <div class="rating-summary mb-3">
+            <div class="mb-2"><strong>@Model.User?.UserName</strong></div>
+            <div style="font-size:0.85rem;color:var(--text-muted)">@Model.DateCreated.ToString("dd.MM.yyyy HH:mm")</div>
+            <div class="mt-2"><strong>Адрес:</strong> @Model.DeliveryAddress</div>
+            <div><strong>Телефон:</strong> @Model.Phone</div>
+            @if (!string.IsNullOrEmpty(Model.Comment))
+            {
+                <div><strong>Комментарий:</strong> @Model.Comment</div>
+            }
+            <hr />
+            <div class="d-flex justify-content-between">
+                <strong>Итого</strong>
+                <span style="font-size:1.2rem;font-weight:800;color:var(--brand)">@Model.Total.ToString("N0") ₸</span>
+            </div>
+        </div>
+
+        <div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem">
+            <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem">@L.T("admin.change_status")</h3>
+            <form method="post" action="/admin/orders/changestatus/@Model.Id">
+                @Html.AntiForgeryToken()
+                <div class="mb-2">
+                    <select name="status" class="form-select">
+                        @foreach (CosmeticsShop.Domain.Enums.OrderStatusEnum s in Enum.GetValues(typeof(CosmeticsShop.Domain.Enums.OrderStatusEnum)))
+                        {
+                            var sLabel = s switch
+                            {
+                                CosmeticsShop.Domain.Enums.OrderStatusEnum.Pending    => L.T("order.status_pending"),
+                                CosmeticsShop.Domain.Enums.OrderStatusEnum.Processing => L.T("order.status_processing"),
+                                CosmeticsShop.Domain.Enums.OrderStatusEnum.Shipped    => L.T("order.status_shipped"),
+                                CosmeticsShop.Domain.Enums.OrderStatusEnum.Delivered  => L.T("order.status_delivered"),
+                                _                                                      => L.T("order.status_cancelled")
+                            };
+                            <option value="@((int)s)" selected="@(Model.Status == s ? "selected" : null)">@sLabel</option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn-brand w-100">Сохранить</button>
+            </form>
+        </div>
+    </div>
+</div>
