@@ -75,6 +75,7 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
     await DbInitializer.SeedAdminAsync(scope.ServiceProvider);
+    await DbInitializer.FixProductImagesAsync(db);
 }
 
 // Admin routes (order matters - more specific first)
