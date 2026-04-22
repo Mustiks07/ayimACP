@@ -44,12 +44,24 @@ public static class DbInitializer
     {
         var fixes = new Dictionary<int, string>
         {
+            // Тональный крем — флаконы с тоналкой
             [3]  = "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=600&fit=crop",
+            // Мицеллярная вода — бутылочка средства для умывания
             [6]  = "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=600&fit=crop",
-            [7]  = "https://images.unsplash.com/photo-1526758097130-bab247274f58?w=600&fit=crop",
-            [10] = "https://images.unsplash.com/photo-1541643600914-78b084683702?w=600&fit=crop",
-            [11] = "https://images.unsplash.com/photo-1557170334-a9086a2b4282?w=600&fit=crop",
+            // SPF-крем — флакон солнцезащитного крема
+            [7]  = "https://images.unsplash.com/photo-1583241800698-e8ab01830a24?w=600&fit=crop",
+            // Шампунь — флакон шампуня
+            [8]  = "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?w=600&fit=crop",
+            // Маска для волос — баночка маски
+            [9]  = "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=600&fit=crop",
+            // Парфюм Miss Dior — флакон духов
+            [10] = "https://images.unsplash.com/photo-1619451334792-150fd785ee74?w=600&fit=crop",
+            // Парфюм Chanel No.5 — флакон духов
+            [11] = "https://images.unsplash.com/photo-1583241801015-2c4bf8e79d30?w=600&fit=crop",
+            // Гель для душа — тюбик/флакон
             [13] = "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&fit=crop",
+            // Хайлайтер — палетка макияжа
+            [17] = "https://images.unsplash.com/photo-1596704017254-9b5e2a025acf?w=600&fit=crop",
         };
 
         var ids = fixes.Keys.ToList();
