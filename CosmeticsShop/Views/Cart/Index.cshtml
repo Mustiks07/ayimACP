@@ -5,12 +5,11 @@
 }
 
 <div class="container py-4">
-    <h1 class="section-title">🛒 @L.T("cart.title")</h1>
+    <h1 class="section-title">@L.T("cart.title")</h1>
 
     @if (!Model.Items.Any())
     {
         <div class="text-center py-5">
-            <div style="font-size:5rem">🛒</div>
             <p class="text-muted mt-2">@L.T("cart.empty")</p>
             <a href="/products" class="btn-brand">@L.T("cart.continue")</a>
         </div>
@@ -35,7 +34,6 @@
                             }
                         </div>
 
-                        <!-- Qty update form -->
                         <form method="post" action="/cart/update" class="qty-control">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="itemId" value="@item.Id" />

@@ -9,9 +9,8 @@
     @if (!Model.Any())
     {
         <div class="text-center py-5">
-            <div style="font-size:4rem">📦</div>
             <p class="text-muted mt-2">@L.T("order.no_orders")</p>
-            <a href="/products" class="btn-brand">🛍️ @L.T("nav.products")</a>
+            <a href="/products" class="btn-brand">@L.T("nav.products")</a>
         </div>
     }
     else

@@ -23,7 +23,7 @@
                         @foreach (var c in Model.Categories)
                         {
                             <option value="@c.Id" selected="@(Model.CategoryId == c.Id ? "selected" : null)">
-                                @c.IconEmoji @L.TName(c.Title)
+                                @L.TName(c.Title)
                             </option>
                         }
                     </select>
@@ -85,7 +85,7 @@
     @if (!Model.Products.Any())
     {
         <div class="text-center py-5">
-            <div style="font-size:4rem;opacity:.4">🔍</div>
+            <div style="font-size:4rem;opacity:.4;font-weight:800;color:var(--brand)">?</div>
             <p style="color:var(--text-muted);margin-top:0.75rem">
                 @(L.Lang == "kz" ? "Тауарлар табылмады. Сүзгілерді өзгертіп көріңіз." : "Товары не найдены. Попробуйте изменить фильтры.")
             </p>
@@ -107,7 +107,7 @@
                                 else
                                 {
                                     <div class="d-flex align-items-center justify-content-center h-100"
-                                         style="font-size:3rem;color:var(--brand-light)">💄</div>
+                                         style="font-size:1rem;color:var(--brand-light);font-weight:600">Beauty</div>
                                 }
                                 <div class="card-badges">
                                     @if (p.IsBestseller) { <span class="badge-bestseller">@L.T("prod.bestseller")</span> }
@@ -135,7 +135,7 @@
                                         @Html.AntiForgeryToken()
                                         <input type="hidden" name="productId" value="@p.Id" />
                                         <button type="submit" class="btn-brand w-100" style="font-size:0.82rem;padding:0.45rem 0.7rem;justify-content:center">
-                                            🛒 @L.T("prod.add_to_cart")
+                                            @L.T("prod.add_to_cart")
                                         </button>
                                     </form>
                                 }

@@ -5,7 +5,7 @@
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 style="font-size:1.5rem;font-weight:800">🏷️ @L.T("admin.brands")</h1>
+    <h1 style="font-size:1.5rem;font-weight:800">@L.T("admin.brands")</h1>
     <a href="/admin/brands/new" class="btn-brand">+ @L.T("admin.add")</a>
 </div>
 
@@ -21,7 +21,7 @@
                     <td>@b.Id</td>
                     <td><strong>@b.Title</strong></td>
                     <td>@b.Country</td>
-                    <td>@(b.IsVerified ? "✅" : "—")</td>
+                    <td>@(b.IsVerified ? "✓" : "—")</td>
                     <td style="font-size:0.85rem;color:var(--text-muted);max-width:200px">@b.Description</td>
                     <td>
                         <div class="d-flex gap-1">

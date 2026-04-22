@@ -5,7 +5,7 @@
     var newReviews   = ViewBag.NewReviews   as List<CosmeticsShop.Domain.Entities.Review> ?? new();
 }
 
-<h1 style="font-size:1.5rem;font-weight:800;margin-bottom:1.5rem">📊 @L.T("admin.dashboard")</h1>
+<h1 style="font-size:1.5rem;font-weight:800;margin-bottom:1.5rem">@L.T("admin.dashboard")</h1>
 
 <div class="row g-3 mb-4">
     <div class="col-6 col-md-3">
@@ -36,7 +36,7 @@
 
 <div class="row g-4">
     <div class="col-12 col-md-7">
-        <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem">📦 @L.T("admin.recent_orders")</h2>
+        <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem">@L.T("admin.recent_orders")</h2>
         <div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
             <table class="admin-table">
                 <thead>
@@ -73,7 +73,7 @@
     </div>
 
     <div class="col-12 col-md-5">
-        <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem">💬 @L.T("admin.new_reviews")</h2>
+        <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem">@L.T("admin.new_reviews")</h2>
         @foreach (var review in newReviews)
         {
             <div class="review-card" style="margin-bottom:0.5rem">

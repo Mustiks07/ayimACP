@@ -5,12 +5,11 @@
 }
 
 <div class="container py-4">
-    <h1 class="section-title">👤 @L.T("profile.title")</h1>
+    <h1 class="section-title">@L.T("profile.title")</h1>
 
     <div class="row g-4">
         <div class="col-12 col-md-4">
             <div class="rating-summary text-center">
-                <div style="font-size:4rem;margin-bottom:0.5rem">👤</div>
                 <div style="font-size:1.25rem;font-weight:700">@User.Identity?.Name</div>
                 <div style="font-size:0.85rem;color:var(--text-muted);margin-top:0.25rem">
                     @if (User.IsInRole("Admin"))
@@ -37,7 +36,7 @@
 
         <div class="col-12 col-md-8">
             <!-- Recent Orders -->
-            <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:1rem">📦 @L.T("order.my_orders")</h2>
+            <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:1rem">@L.T("order.my_orders")</h2>
             @if (!orders.Any())
             {
                 <p style="color:var(--text-muted)">@L.T("order.no_orders")</p>
@@ -75,7 +74,7 @@
             }
 
             <!-- Reviews -->
-            <h2 style="font-size:1.2rem;font-weight:700;margin:1.5rem 0 1rem">💬 @L.T("profile.my_reviews")</h2>
+            <h2 style="font-size:1.2rem;font-weight:700;margin:1.5rem 0 1rem">@L.T("profile.my_reviews")</h2>
             @if (!reviews.Any())
             {
                 <p style="color:var(--text-muted)">@L.T("rev.no_reviews")</p>

@@ -18,7 +18,7 @@
             <h1 class="section-title mb-0">@brand?.Title @(brand?.IsVerified == true ? "✓" : "")</h1>
             @if (!string.IsNullOrEmpty(brand?.Country))
             {
-                <div style="color:var(--text-muted)">📍 @brand.Country</div>
+                <div style="color:var(--text-muted)">@brand.Country</div>
             }
         </div>
     </div>

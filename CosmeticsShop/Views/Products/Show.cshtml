@@ -33,7 +33,7 @@
                         }
                         else
                         {
-                            <div class="d-flex align-items-center justify-content-center h-100" style="font-size:5rem;background:#F1F5F9;border-radius:var(--radius)">💄</div>
+                            <div class="d-flex align-items-center justify-content-center h-100" style="font-size:1.5rem;font-weight:700;color:var(--brand);background:#F1F5F9;border-radius:var(--radius)">Beauty</div>
                         }
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                     </div>
                     <h1 style="font-size:1.75rem;font-weight:800;margin:0.25rem 0 0.5rem">@Model.Title</h1>
                     <div style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.5rem">
-                        📂 @Model.Category.IconEmoji @L.TName(Model.Category.Title)
+                        @L.TName(Model.Category.Title)
                     </div>
 
                     @if (reviews.Count > 0)
@@ -68,13 +68,13 @@
                     @if (!string.IsNullOrEmpty(Model.Volume))
                     {
                         <div style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.25rem">
-                            📦 @L.T("prod.volume"): <strong>@Model.Volume</strong>
+                            @L.T("prod.volume"): <strong>@Model.Volume</strong>
                         </div>
                     }
                     @if (!string.IsNullOrEmpty(Model.SkinType))
                     {
                         <div style="font-size:0.9rem;color:var(--text-muted);margin-bottom:1rem">
-                            🌿 @L.T("prod.skin_type"): <strong>@L.TName(Model.SkinType)</strong>
+                            @L.T("prod.skin_type"): <strong>@L.TName(Model.SkinType)</strong>
                         </div>
                     }
 
@@ -88,11 +88,11 @@
                                 <input type="number" name="quantity" value="1" min="1" max="99" />
                                 <button type="button" class="qty-inc">+</button>
                             </div>
-                            <button type="submit" class="btn-brand">🛒 @L.T("prod.add_to_cart")</button>
+                            <button type="submit" class="btn-brand">@L.T("prod.add_to_cart")</button>
                         </form>
                         <div class="mt-2">
                             <a href="/reviews/new/@Model.Id" class="btn-outline-brand" style="font-size:0.9rem">
-                                ✍️ @L.T("prod.write_review")
+                                @L.T("prod.write_review")
                             </a>
                         </div>
                     }
@@ -118,7 +118,6 @@
                 @if (!reviews.Any())
                 {
                     <div class="text-center py-4" style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius)">
-                        <div style="font-size:3rem">💬</div>
                         <p style="color:var(--text-muted)">@L.T("rev.no_reviews")</p>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
@@ -157,7 +156,7 @@
                                         @Html.AntiForgeryToken()
                                         <button type="submit" class="vote-btn" style="color:#EF4444"
                                                 onclick="return confirm('Удалить отзыв?')">
-                                            🗑️ @L.T("rev.delete")
+                                            @L.T("rev.delete")
                                         </button>
                                     </form>
                                 }
@@ -183,7 +182,7 @@
                                         <input type="hidden" name="reviewId" value="@review.Id" />
                                         <input type="hidden" name="voteType" value="0" />
                                         <button type="submit" class="vote-btn @(userVote?.VoteType == CosmeticsShop.Domain.Enums.ReviewVoteTypeEnum.Useful ? "text-brand" : "")">
-                                            👍 @L.T("rev.useful") (@usefulCount)
+                                            @L.T("rev.useful") (@usefulCount)
                                         </button>
                                     </form>
                                     <form method="post" action="/reviews/vote">
@@ -191,7 +190,7 @@
                                         <input type="hidden" name="reviewId" value="@review.Id" />
                                         <input type="hidden" name="voteType" value="1" />
                                         <button type="submit" class="vote-btn">
-                                            👎 @L.T("rev.not_useful") (@notUsefulCount)
+                                            @L.T("rev.not_useful") (@notUsefulCount)
                                         </button>
                                     </form>
                                 </div>
@@ -245,7 +244,7 @@
                 @if (User.Identity?.IsAuthenticated == true)
                 {
                     <a href="/reviews/new/@Model.Id" class="btn-brand w-100 text-center mt-3 d-block">
-                        ✍️ @L.T("prod.write_review")
+                        @L.T("prod.write_review")
                     </a>
                 }
             </div>

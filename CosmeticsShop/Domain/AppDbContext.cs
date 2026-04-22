@@ -86,7 +86,7 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
             new Product
             {
                 Id = 3, Title = "Тональный крем Studio Fix", Description = "Профессиональный тональный крем с матовым финишем. Обеспечивает полное покрытие и стойкость до 24 часов.",
-                Price = 18000, ImageUrl = "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=600&fit=crop",
+                Price = 18000, ImageUrl = "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=600&fit=crop",
                 Volume = "30ml", SkinType = "Жирная", InStock = true, IsVerified = true, IsBestseller = false,
                 PriceRange = PriceRangeEnum.Premium, BrandId = 3, CategoryId = 2, DateCreated = now
             },
@@ -107,14 +107,14 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
             new Product
             {
                 Id = 6, Title = "Мицеллярная вода Garnier", Description = "Нежно очищает кожу, снимает макияж и успокаивает. Подходит даже для чувствительной кожи.",
-                Price = 2100, ImageUrl = "https://images.unsplash.com/photo-1583241475880-083f84372725?w=600&fit=crop",
+                Price = 2100, ImageUrl = "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=600&fit=crop",
                 Volume = "400ml", SkinType = "Чувствительная", InStock = true, IsVerified = true, IsBestseller = false,
                 PriceRange = PriceRangeEnum.Budget, BrandId = 9, CategoryId = 1, DateCreated = now
             },
             new Product
             {
                 Id = 7, Title = "Солнцезащитный крем SPF50", Description = "Лёгкий солнцезащитный крем с высоким SPF50. Защищает от UVA и UVB лучей, не оставляет белых следов.",
-                Price = 3900, ImageUrl = "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=600&fit=crop",
+                Price = 3900, ImageUrl = "https://images.unsplash.com/photo-1526758097130-bab247274f58?w=600&fit=crop",
                 Volume = "50ml", SkinType = "Все типы", InStock = true, IsVerified = true, IsBestseller = false,
                 PriceRange = PriceRangeEnum.Medium, BrandId = 8, CategoryId = 7, DateCreated = now
             },
@@ -135,14 +135,14 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
             new Product
             {
                 Id = 10, Title = "Парфюм Miss Dior", Description = "Изысканный аромат свежих пионов и мандарина. Символ романтики и женственности.",
-                Price = 65000, ImageUrl = "https://images.unsplash.com/photo-1583241475880-083f84372725?w=600&fit=crop",
+                Price = 65000, ImageUrl = "https://images.unsplash.com/photo-1541643600914-78b084683702?w=600&fit=crop",
                 Volume = "50ml", SkinType = "Все типы", InStock = true, IsVerified = true, IsBestseller = true,
                 PriceRange = PriceRangeEnum.Luxury, BrandId = 6, CategoryId = 4, DateCreated = now
             },
             new Product
             {
                 Id = 11, Title = "Парфюм Chanel No.5", Description = "Легендарный аромат — альдегидный флoral с нотами жасмина и розы. Икона парфюмерии.",
-                Price = 89000, ImageUrl = "https://images.unsplash.com/photo-1583241475880-083f84372725?w=600&fit=crop",
+                Price = 89000, ImageUrl = "https://images.unsplash.com/photo-1557170334-a9086a2b4282?w=600&fit=crop",
                 Volume = "100ml", SkinType = "Все типы", InStock = true, IsVerified = true, IsBestseller = true,
                 PriceRange = PriceRangeEnum.Luxury, BrandId = 7, CategoryId = 4, DateCreated = now
             },
@@ -156,7 +156,7 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
             new Product
             {
                 Id = 13, Title = "Гель для душа Nivea", Description = "Нежный гель для душа с питательной формулой. Оставляет кожу мягкой и увлажнённой весь день.",
-                Price = 1500, ImageUrl = "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=600&fit=crop",
+                Price = 1500, ImageUrl = "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&fit=crop",
                 Volume = "500ml", SkinType = "Все типы", InStock = true, IsVerified = true, IsBestseller = false,
                 PriceRange = PriceRangeEnum.Budget, BrandId = 8, CategoryId = 5, DateCreated = now
             },

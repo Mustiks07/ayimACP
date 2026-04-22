@@ -5,7 +5,7 @@
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 style="font-size:1.5rem;font-weight:800">🧴 @L.T("admin.products")</h1>
+    <h1 style="font-size:1.5rem;font-weight:800">@L.T("admin.products")</h1>
     <a href="/admin/products/new" class="btn-brand">+ @L.T("admin.add")</a>
 </div>
 
@@ -40,9 +40,9 @@
                         @if (p.IsBestseller) { <span class="badge-bestseller">Хит</span> }
                     </td>
                     <td>@p.Brand?.Title</td>
-                    <td>@p.Category?.IconEmoji @p.Category?.Title</td>
+                    <td>@p.Category?.Title</td>
                     <td>@p.Price.ToString("N0") ₸</td>
-                    <td>@(p.InStock ? "✅" : "❌")</td>
+                    <td>@(p.InStock ? "Да" : "Нет")</td>
                     <td>@(p.Reviews.Count > 0 ? $"★ {p.AverageRating:0.0} ({p.ReviewCount})" : "—")</td>
                     <td>
                         <div class="d-flex gap-1">
