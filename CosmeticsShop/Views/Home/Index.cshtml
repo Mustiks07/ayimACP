@@ -8,23 +8,27 @@
     double avgRating  = ViewBag.AvgRating ?? 0.0;
 }
 
-<!-- Hero -->
+<!-- ── HERO ──────────────────────────────────────── -->
 <section class="hero">
-    <div class="container">
-        <h1>💄 @L.T("home.title")</h1>
+    <div class="container hero-content">
+        <div class="hero-eyebrow">
+            ✨ @(L.Lang == "kz" ? "Сұлулық дүниесі" : "Мир красоты")
+        </div>
+        <h1>@L.T("home.title")<br/><span>@(L.Lang == "kz" ? "Косметика дүкені" : "Beauty Store")</span></h1>
         <p>@L.T("home.subtitle")</p>
-        <div class="d-flex gap-3 justify-content-center flex-wrap">
+        <div class="hero-actions">
             <a href="/products" class="btn-brand">🛍️ @L.T("nav.products")</a>
             @if (User.Identity?.IsAuthenticated != true)
             {
-                <a href="/account/register" class="btn-outline-brand">@L.T("nav.register")</a>
+                <a href="/account/register" class="btn-outline-light">@L.T("nav.register")</a>
             }
         </div>
     </div>
 </section>
 
 <div class="container">
-    <!-- Stats -->
+
+    <!-- ── STATS ────────────────────────────────────── -->
     <div class="stats-bar">
         <div class="stat-item">
             <span class="stat-num">@totalProducts</span>
@@ -40,30 +44,38 @@
         </div>
     </div>
 
-    <!-- Categories -->
-    <section class="mt-4">
+    <!-- ── CATEGORIES ───────────────────────────────── -->
+    <section class="mb-5">
+        <div class="section-badge">@(L.Lang == "kz" ? "Санаттар" : "Категории")</div>
         <h2 class="section-title">@L.T("home.by_category")</h2>
         <div class="category-pills">
             @foreach (var cat in categories)
             {
                 <a href="/products?CategoryId=@cat.Id" class="category-pill">
-                    @cat.IconEmoji @cat.Title
+                    <span>@cat.IconEmoji</span>
+                    <span>@L.TName(cat.Title)</span>
                 </a>
             }
         </div>
     </section>
 
-    <!-- Bestsellers -->
+    <!-- ── BESTSELLERS ──────────────────────────────── -->
     @if (bestsellers.Any())
     {
-        <section class="mt-4">
-            <h2 class="section-title">⭐ @L.T("home.bestsellers")</h2>
+        <section class="mb-5">
+            <div class="section-badge">@(L.Lang == "kz" ? "Ең жақсы тауарлар" : "Хиты продаж")</div>
+            <div class="d-flex justify-content-between align-items-end mb-3">
+                <h2 class="section-title mb-0">⭐ @L.T("home.bestsellers")</h2>
+                <a href="/products?Sort=rating" class="btn-ghost" style="font-size:0.82rem">
+                    @(L.Lang == "kz" ? "Барлығы →" : "Все →")
+                </a>
+            </div>
             <div class="row g-3">
                 @foreach (var p in bestsellers)
                 {
                     <div class="col-6 col-md-3">
                         <div class="product-card">
-                            <a href="/products/show/@p.Id" class="text-decoration-none">
+                            <a href="/products/show/@p.Id" style="text-decoration:none;display:block">
                                 <div class="card-img-wrap">
                                     @if (!string.IsNullOrEmpty(p.ImageUrl))
                                     {
@@ -71,19 +83,25 @@
                                     }
                                     else
                                     {
-                                        <div class="d-flex align-items-center justify-content-center h-100" style="font-size:3rem">💄</div>
+                                        <div class="d-flex align-items-center justify-content-center h-100" style="font-size:3.5rem;color:var(--brand-light)">💄</div>
                                     }
+                                    <div class="card-badges">
+                                        <span class="badge-bestseller">@L.T("prod.bestseller")</span>
+                                    </div>
                                 </div>
                             </a>
                             <div class="card-body">
                                 <div class="card-brand">@p.Brand.Title</div>
-                                <a href="/products/show/@p.Id" class="text-decoration-none">
+                                <a href="/products/show/@p.Id" style="text-decoration:none">
                                     <div class="card-title">@p.Title</div>
                                 </a>
-                                <div class="d-flex align-items-center gap-1 mb-1">
-                                    <span class="stars sm">@(new string('★', (int)Math.Round(p.AverageRating)))</span>
-                                    <span style="font-size:0.75rem;color:var(--text-muted)">(@p.ReviewCount)</span>
-                                </div>
+                                @if (p.ReviewCount > 0)
+                                {
+                                    <div class="card-rating">
+                                        <span class="stars sm">@(new string('★', (int)Math.Round(p.AverageRating)))</span>
+                                        <span class="star-num">@p.AverageRating.ToString("0.0") (@p.ReviewCount)</span>
+                                    </div>
+                                }
                                 <div class="card-price">@p.Price.ToString("N0") ₸</div>
                             </div>
                         </div>
@@ -93,30 +111,38 @@
         </section>
     }
 
-    <!-- Brands -->
-    <section class="mt-5">
-        <h2 class="section-title">@L.T("home.all_brands")</h2>
+    <!-- ── BRANDS ───────────────────────────────────── -->
+    <section class="mb-5">
+        <div class="section-badge">@(L.Lang == "kz" ? "Брендтер" : "Бренды")</div>
+        <div class="d-flex justify-content-between align-items-end mb-3">
+            <h2 class="section-title mb-0">@L.T("home.all_brands")</h2>
+            <a href="/home/brands" class="btn-ghost" style="font-size:0.82rem">
+                @(L.Lang == "kz" ? "Барлығы →" : "Все →")
+            </a>
+        </div>
         <div class="d-flex flex-wrap gap-2">
             @foreach (var b in brands)
             {
-                <a href="/home/brandproducts/@b.Id" class="brand-pill">
-                    @b.Title @(b.IsVerified ? "✓" : "")
+                <a href="/home/brandproducts/@b.Id" class="brand-chip">
+                    @b.Title
+                    @if (b.IsVerified) { <span style="color:var(--brand);font-size:0.75rem">✓</span> }
                     @if (!string.IsNullOrEmpty(b.Country))
                     {
-                        <span style="color:var(--text-muted);font-weight:400"> · @b.Country</span>
+                        <span style="color:var(--text-light);font-size:0.75rem;font-weight:400">@b.Country</span>
                     }
                 </a>
             }
         </div>
     </section>
 
-    <!-- CTA for guests -->
+    <!-- ── CTA ──────────────────────────────────────── -->
     @if (User.Identity?.IsAuthenticated != true)
     {
-        <div class="cta-section">
+        <div class="cta-section mb-5">
             <h2>@L.T("home.cta_title")</h2>
             <p>@L.T("home.cta_sub")</p>
             <a href="/account/register" class="btn-cta">@L.T("home.cta_btn")</a>
         </div>
     }
+
 </div>

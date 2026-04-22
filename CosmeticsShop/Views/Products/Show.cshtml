@@ -49,7 +49,7 @@
                     </div>
                     <h1 style="font-size:1.75rem;font-weight:800;margin:0.25rem 0 0.5rem">@Model.Title</h1>
                     <div style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.5rem">
-                        📂 @Model.Category.IconEmoji @Model.Category.Title
+                        📂 @Model.Category.IconEmoji @L.TName(Model.Category.Title)
                     </div>
 
                     @if (reviews.Count > 0)
@@ -74,7 +74,7 @@
                     @if (!string.IsNullOrEmpty(Model.SkinType))
                     {
                         <div style="font-size:0.9rem;color:var(--text-muted);margin-bottom:1rem">
-                            🌿 @L.T("prod.skin_type"): <strong>@Model.SkinType</strong>
+                            🌿 @L.T("prod.skin_type"): <strong>@L.TName(Model.SkinType)</strong>
                         </div>
                     }
 

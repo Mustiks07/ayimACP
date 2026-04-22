@@ -327,6 +327,26 @@ public class LangService
         }
     }
 
+    // Translations for DB-stored Russian strings (categories, skin types, etc.)
+    private static readonly Dictionary<string, string> _ruToKz = new()
+    {
+        // Categories
+        ["Уход за лицом"]          = "Бет күтімі",
+        ["Декоративная косметика"] = "Декоративтік косметика",
+        ["Уход за волосами"]       = "Шаш күтімі",
+        ["Парфюмерия"]             = "Парфюмерия",
+        ["Уход за телом"]          = "Дене күтімі",
+        ["Средства для ногтей"]    = "Тырнақ құралдары",
+        ["Солнцезащитные"]         = "Күннен қорғайтын",
+        ["Инструменты и кисти"]    = "Құралдар мен қылқаламдар",
+        // Skin types
+        ["Все типы"]         = "Барлық түрлер",
+        ["Сухая"]            = "Құрғақ",
+        ["Жирная"]           = "Майлы",
+        ["Комбинированная"]  = "Аралас",
+        ["Чувствительная"]   = "Сезімтал",
+    };
+
     public string T(string key)
     {
         var lang = Lang;
@@ -335,5 +355,14 @@ public class LangService
         if (_dict.TryGetValue("ru", out var ru) && ru.TryGetValue(key, out var ruVal))
             return ruVal;
         return key;
+    }
+
+    // Translate a DB-stored Russian name (category/skin type) into the current language
+    public string TName(string? russianText)
+    {
+        if (string.IsNullOrEmpty(russianText)) return string.Empty;
+        if (Lang == "kz" && _ruToKz.TryGetValue(russianText, out var kz))
+            return kz;
+        return russianText;
     }
 }
