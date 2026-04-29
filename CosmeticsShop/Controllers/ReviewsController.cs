@@ -21,22 +21,22 @@ public class ReviewsController : Controller
     }
 
     [HttpGet]
-    public IActionResult New(int productId)
+    public IActionResult New(int id)
     {
-        var product = _data.Products.GetProductById(productId);
+        var product = _data.Products.GetProductById(id);
         if (product == null) return NotFound();
 
         var userId = _userManager.GetUserId(User)!;
         var existing = _data.Reviews.GetReviews()
-            .FirstOrDefault(r => r.ProductId == productId && r.AuthorId == userId);
+            .FirstOrDefault(r => r.ProductId == id && r.AuthorId == userId);
 
         if (existing != null)
         {
             TempData["Error"] = "Вы уже оставили отзыв на этот товар";
-            return RedirectToAction("Show", "Products", new { id = productId });
+            return RedirectToAction("Show", "Products", new { id });
         }
 
-        return View(new CreateReviewViewModel { ProductId = productId, ProductTitle = product.Title });
+        return View(new CreateReviewViewModel { ProductId = id, ProductTitle = product.Title });
     }
 
     [HttpPost]
